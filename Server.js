@@ -50,6 +50,8 @@ io.on('connection',function(socket){
     });
 });
 
+
+
 var add_status = function (status,callback) {
     pool.getConnection(function(err,connection){
         if (err) {
@@ -92,4 +94,7 @@ if(router.get('/get_comments')){
   });
 }
 
+
+console.log('Listening to server... DIR: [' + __dirname + ']');
+console.log(app.path());
 
