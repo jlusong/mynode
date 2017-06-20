@@ -3,6 +3,8 @@ var app = express();
 var mysql   =     require("mysql");
 var http    =     require('http').Server(app);
 var io      =     require("socket.io")(http);
+// var MySQLEvents = require('mysql-events');
+var PouchDB = require('pouchdb-node');
 var router = express.Router();
 
 
@@ -26,6 +28,17 @@ var pool    =    mysql.createPool({
     multipleStatements: true
   });
 
+//  var dsn = {
+//   host:     'localhost',
+//   user:     'repl',
+//   password: 'mypass'
+//   };
+// var myCon = MySQLEvents(dsn);
+
+
+
+
+
 app.get("/",function(req,res){
     res.sendFile(__dirname + '/index.html');
 });
@@ -35,19 +48,25 @@ app.use('/api', router);
 /*  This is auto initiated event when Client connects to Your Machien.  */
 
 io.on('connection',function(socket){  
+
+// console.log(myCon);
+
+
     console.log("A user is connected");
     socket.on('status added',function(status){
       add_status(status,function(res){
         console.log(res);
         if(res==true){
-            // io.emit('refreshfeed',status);
-            socket.emit('refreshfeed',status);
+            io.emit('refreshfeed',status);
+            // socket.emit('refreshfeed',status);
 
         } else {
-            socket.emit('error');
+            io.emit('error');
         }
       });
     });
+
+    
 });
 
 
