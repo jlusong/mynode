@@ -12,8 +12,7 @@
             socket.emit('status added',$("#comment").val());
           });
           socket.on('refreshfeed',function(status){
-            console.log("append");
-            $("#show_comments").append(status + 'show<br /><br />');
+            $("#show_comments").append(status + '<br />');
           });
           getstatuscomment();
           function getstatuscomment(){
