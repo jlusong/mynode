@@ -40,10 +40,11 @@ io.on('connection',function(socket){
       add_status(status,function(res){
         console.log(res);
         if(res==true){
-            io.emit('refreshfeed',status);
+            // io.emit('refreshfeed',status);
+            socket.emit('refreshfeed',status);
 
         } else {
-            io.emit('error');
+            socket.emit('error');
         }
       });
     });
@@ -90,3 +91,5 @@ if(router.get('/get_comments')){
     });
   });
 }
+
+
