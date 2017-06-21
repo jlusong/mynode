@@ -1,5 +1,5 @@
 {
-  "name": "facebook-chat-socket",
+  "name": "mynode",
   "version": "0.0.1",
   "dependencies": {
     "express": "~4.11.2",
