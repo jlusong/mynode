@@ -6,7 +6,7 @@ var io      =     require("socket.io")(http);
 var router = express.Router();
 var MySQLEvents = require('mysql-events');
 var ZongJi = require('zongji');
-var _underScore = require('underscore');
+// var _underScore = require('underscore');
  
  var RETRY_TIMEOUT = 4000;
 
@@ -41,9 +41,9 @@ zongji.on('binlog', function(evt) {
         fields: row
       };
       if(newRow.table=="status"){
-        console.log('updated status');
+        console.log('updated sql table status');
       }else{
-        console.log('other');
+        console.log('updated sql table other');
       }
     }
    // console.log(newRow)
