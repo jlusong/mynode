@@ -57,7 +57,7 @@ zongji.start({
 
 
 process.on('SIGINT', function() {
-  console.log('Got SIGINT.');
+  console.log('Disconnecting listen to database');
   zongji.stop();
   process.exit();
 });
