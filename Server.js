@@ -19,8 +19,8 @@ var zongji = new ZongJi({
 });
 
 zongji.on('binlog', function(evt) {
-  evt.dump();
-  console.log(evt.getEventName());
+  // evt.dump();
+  // console.log(evt.getEventName());
   
   var database = evt.tableMap[evt.tableId].parentSchema;
   var table = evt.tableMap[evt.tableId].tableName;
@@ -41,15 +41,18 @@ zongji.on('binlog', function(evt) {
         fields: row
       };
       if(newRow.table=="status"){
-        console.log('updated');
+        console.log('updated status');
+      }else{
+        console.log('other');
       }
     }
-   console.log(newRow)
+   // console.log(newRow)
 });
 
 
 zongji.start({
-  includeEvents: ['tablemap', 'writerows', 'updaterows', 'deleterows']
+  includeEvents: ['tablemap', 'writerows'],
+  startAtEnd : true
 });
 
 
