@@ -18,36 +18,37 @@ var zongji = new ZongJi({
   // debug: true
 });
 
-zongji.on('binlog', function(evt) {
-  // evt.dump();
-  // console.log(evt.getEventName());
+// zongji.on('binlog', function(evt) {
+//   // evt.dump();
+//   // console.log(evt.getEventName());
   
-  var database = evt.tableMap[evt.tableId].parentSchema;
-  var table = evt.tableMap[evt.tableId].tableName;
-  var columns = evt.tableMap[evt.tableId].columns;
-  var row = evt.tableMap[evt.tableId].columns.s_text;
-  var oldRow = {};
-  var newRow = {};
-  var changedColumns = [];
+//   var database = evt.tableMap[evt.tableId].parentSchema;
+//   var table = evt.tableMap[evt.tableId].tableName;
+//   var columns = evt.tableMap[evt.tableId].columns;
+//   var row = evt.tableMap[evt.tableId].columns.s_text;
+//   var oldRow = {};
+//   var newRow = {};
+//   var changedColumns = [];
 
-   if (evt.getEventName() == 'writerows') {
-      oldRow = null;
-      newRow = {
-        database: database,
-        table: table,
-        affectedColumns: columns,
-        value:  columns.value,
-        changedColumns: changedColumns ,       
-        fields: row
-      };
-      if(newRow.table=="status"){
-        console.log('updated sql table status');
-      }else{
-        console.log('updated sql table other');
-      }
-    }
-   // console.log(newRow)
-});
+//    if (evt.getEventName() == 'writerows') {
+//       oldRow = null;
+//       newRow = {
+//         database: database,
+//         table: table,
+//         affectedColumns: columns,
+//         value:  columns.value,
+//         changedColumns: changedColumns ,       
+//         fields: row
+//       };
+//       if(newRow.table=="status"){
+//         console.log('updated sql table status');
+
+//       }else{
+//         console.log('updated sql table other');
+//       }
+//     }
+//    // console.log(newRow)
+// });
 
 
 zongji.start({
@@ -98,6 +99,61 @@ var dsn = {
 
 io.on('connection',function(socket){  
     console.log("A user is connected");
+
+
+
+    zongji.on('binlog', function(evt) {
+  // evt.dump();
+  // console.log(evt.getEventName());
+  
+    var database = evt.tableMap[evt.tableId].parentSchema;
+    var table = evt.tableMap[evt.tableId].tableName;
+    var columns = evt.tableMap[evt.tableId].columns;
+    var row = evt.tableMap[evt.tableId].columns.s_text;
+    var oldRow = {};
+    var newRow = {};
+    var changedColumns = [];
+
+     if (evt.getEventName() == 'writerows') {
+        oldRow = null;
+        newRow = {
+          database: database,
+          table: table,
+          affectedColumns: columns,
+          value:  columns.value,
+          changedColumns: changedColumns ,       
+          fields: row
+        };
+        if(newRow.table=="status"){
+          console.log('updated sql table status');
+          
+          var res = {};
+          sqlQuery = 'SELECT * FROM status order by status_id desc limit 1;';
+          // console.log(sqlQuery);
+          mysql_connection.query(sqlQuery, function(err, rows, fields){
+            if(err) throw err;
+            console.log(rows[0]);
+            // console.log(rows[0].s_text);
+            // if(rows.length > 0){
+
+            //   res.json({data:rows});
+            // }
+            io.sockets.emit('refreshfeed',rows[0].s_text);
+          });
+
+        }else{
+          console.log('updated sql table other');
+        }
+      }
+     // console.log(newRow)
+  });
+
+
+
+
+
+
+
     socket.on('status added',function(status){
       add_status(status,function(res){
         console.log(res);
@@ -110,6 +166,17 @@ io.on('connection',function(socket){
         }
       });
     });
+
+
+
+
+
+
+
+
+
+
+
 
 });
 
